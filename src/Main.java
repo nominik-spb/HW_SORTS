@@ -1,15 +1,84 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.io.*;
+import java.util.Arrays;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+public class Main {
+
+    public static final int STR_TEAM = 10;
+
+    public static void main(String[] args) throws IOException {
+        int[][] teams = {
+                {45, 31, 24, 22, 20, 17, 14, 13, 12, 10},
+                {31, 18, 15, 12, 10, 8, 6, 4, 2, 1},
+                {51, 30, 10, 9, 8, 7, 6, 5, 2, 1}
+
+        };
+
+        int[] nationalTeam = mergeAll(teams);
+        System.out.println(Arrays.toString(nationalTeam)); // [51, 45, 31, 31, 30, 24, 22, 20, 18, 17]
+    }
+
+    /**
+     * Метод для слияния всех команд в одну национальную
+     */
+    public static int[] mergeAll(int[][] teams) {
+
+        int[] mergeTeam = team(0, teams);
+        int i = 1;
+        while (i < teams.length) {
+            int[] team = team(i, teams);
+            mergeTeam = merge(mergeTeam, team);
+            i++;
         }
+        return mergeTeam;
+    }
+
+    /**
+     * Метод для слияния двух команд в одну
+     */
+    public static int[] merge(int[] teamA, int[] teamB) {
+        int a = 0;  // счетчик по массиву A
+        int b = 0;  // счетчик по массиву B
+        int i = 0;  // счетчик по итоговому массиву
+        int[] merge = new int[STR_TEAM];
+        while (i < merge.length && (a < teamA.length || b < teamB.length)) {
+            if (a == teamA.length) {            // если массив А закончился
+                merge[i] = teamB[b];
+                b++;
+                i++;
+            } else if (b == teamB.length) {     // если массив В закончился
+                merge[i] = teamA[a];
+                a++;
+                i++;
+            } else {
+                if (teamA[a] < teamB[b]) {
+                    merge[i] = teamB[b];
+                    b++;
+                    i++;
+                } else if (teamB[b] < teamA[a]) {
+                    merge[i] = teamA[a];
+                    a++;
+                    i++;
+                } else {
+                    merge[i] = teamA[a];
+                    i++;
+                    merge[i] = teamB[b];
+                    i++;
+                    a++;
+                    b++;
+                }
+            }
+        }
+        return merge;
+    }
+
+    // вспомогательный метод извлечение строки массива teams в одномерный массив
+    public static int[] team(int numTeam, int[][] teams) {
+        int l = teams[numTeam].length;
+        int[] team = new int[l];
+        int i = 0;
+        for (i = 0; i < l; i++) {
+            team[i] = teams[numTeam][i];
+        }
+        return team;
     }
 }
