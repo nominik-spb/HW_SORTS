@@ -40,32 +40,22 @@ public class Main {
         int b = 0;  // счетчик по массиву B
         int i = 0;  // счетчик по итоговому массиву
         int[] merge = new int[STR_TEAM];
-        while (i < merge.length && (a < teamA.length || b < teamB.length)) {
-            if (a == teamA.length) {            // если массив А закончился
+        while (i < merge.length) {
+            if (teamA[a] < teamB[b]) {
                 merge[i] = teamB[b];
                 b++;
                 i++;
-            } else if (b == teamB.length) {     // если массив В закончился
+            } else if (teamB[b] < teamA[a]) {
                 merge[i] = teamA[a];
                 a++;
                 i++;
             } else {
-                if (teamA[a] < teamB[b]) {
-                    merge[i] = teamB[b];
-                    b++;
-                    i++;
-                } else if (teamB[b] < teamA[a]) {
-                    merge[i] = teamA[a];
-                    a++;
-                    i++;
-                } else {
-                    merge[i] = teamA[a];
-                    i++;
-                    merge[i] = teamB[b];
-                    i++;
-                    a++;
-                    b++;
-                }
+                merge[i] = teamA[a];
+                i++;
+                merge[i] = teamB[b];
+                i++;
+                a++;
+                b++;
             }
         }
         return merge;
